@@ -29,7 +29,7 @@ fi
 [ -z "$TOOL_ARGS" ] && TOOL_ARGS="{}"
 
 # 1. Initialize 并获取 Session ID
-INIT_RESPONSE=$(curl -s -i -X POST "$MCP_URL" \
+INIT_RESPONSE=$(curl --noproxy '*' -s -i -X POST "$MCP_URL" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"openclaw","version":"1.0"}}}')
 
@@ -42,13 +42,13 @@ if [ -z "$SESSION_ID" ]; then
 fi
 
 # 2. Initialized notification
-curl -s -X POST "$MCP_URL" \
+curl --noproxy '*' -s -X POST "$MCP_URL" \
   -H "Content-Type: application/json" \
   -H "Mcp-Session-Id: $SESSION_ID" \
   -d '{"jsonrpc":"2.0","method":"notifications/initialized"}' > /dev/null
 
 # 3. Call tool
-RESULT=$(curl -s --max-time 120 -X POST "$MCP_URL" \
+RESULT=$(curl --noproxy '*' -s --max-time 120 -X POST "$MCP_URL" \
   -H "Content-Type: application/json" \
   -H "Mcp-Session-Id: $SESSION_ID" \
   -d "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/call\",\"params\":{\"name\":\"$TOOL_NAME\",\"arguments\":$TOOL_ARGS}}")
