@@ -29,8 +29,8 @@ description: |
 | `status.sh` | 检查登录状态 |
 | `search.sh <关键词>` | 搜索内容 |
 | `recommend.sh` | 获取推荐列表 |
-| `post-detail.sh <note_id> <xsec_token>` | 获取帖子详情 |
-| `comment.sh <note_id> <xsec_token> <内容>` | 发表评论 |
+| `post-detail.sh <feed_id> <xsec_token>` | 获取帖子详情 |
+| `comment.sh <feed_id> <xsec_token> <内容>` | 发表评论 |
 | `user-profile.sh <user_id>` | 获取用户主页 |
 | `track-topic.sh <话题> [选项]` | 热点跟踪报告 |
 | `mcp-call.sh <tool> [args]` | 通用工具调用 |

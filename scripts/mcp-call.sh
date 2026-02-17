@@ -6,6 +6,7 @@ set -e
 TOOL_NAME="$1"
 TOOL_ARGS="$2"
 MCP_URL="${MCP_URL:-http://localhost:18060/mcp}"
+export no_proxy="${no_proxy:+$no_proxy,}localhost,127.0.0.1"
 
 if [ -z "$TOOL_NAME" ]; then
     echo "用法: $0 <tool_name> [json_args]"
@@ -14,11 +15,11 @@ if [ -z "$TOOL_NAME" ]; then
     echo "  check_login_status    - 检查登录状态"
     echo "  search_feeds          - 搜索内容 {\"keyword\": \"...\"}"
     echo "  list_feeds            - 获取首页推荐"
-    echo "  get_feed_detail       - 获取帖子详情 {\"note_id\": \"...\", \"xsec_token\": \"...\"}"
-    echo "  post_comment_to_feed  - 发表评论 {\"note_id\": \"...\", \"xsec_token\": \"...\", \"content\": \"...\"}"
+    echo "  get_feed_detail       - 获取帖子详情 {\"feed_id\": \"...\", \"xsec_token\": \"...\"}"
+    echo "  post_comment_to_feed  - 发表评论 {\"feed_id\": \"...\", \"xsec_token\": \"...\", \"content\": \"...\"}"
     echo "  user_profile          - 获取用户主页 {\"user_id\": \"...\"}"
-    echo "  like_feed             - 点赞/取消 {\"note_id\": \"...\", \"xsec_token\": \"...\", \"like\": true}"
-    echo "  favorite_feed         - 收藏/取消 {\"note_id\": \"...\", \"xsec_token\": \"...\", \"favorite\": true}"
+    echo "  like_feed             - 点赞/取消 {\"feed_id\": \"...\", \"xsec_token\": \"...\", \"like\": true}"
+    echo "  favorite_feed         - 收藏/取消 {\"feed_id\": \"...\", \"xsec_token\": \"...\", \"favorite\": true}"
     echo "  get_login_qrcode      - 获取登录二维码"
     echo "  publish_content       - 发布图文"
     echo "  publish_with_video    - 发布视频"
