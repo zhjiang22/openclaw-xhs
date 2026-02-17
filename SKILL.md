@@ -33,6 +33,7 @@ description: |
 | `comment.sh <note_id> <xsec_token> <内容>` | 发表评论 |
 | `user-profile.sh <user_id>` | 获取用户主页 |
 | `track-topic.sh <话题> [选项]` | 热点跟踪报告 |
+| `export-long-image.sh` | 帖子导出为长图（白底黑字+图片拼接） |
 | `mcp-call.sh <tool> [args]` | 通用工具调用 |
 
 ## 快速开始
@@ -76,6 +77,34 @@ cd scripts/
 ./track-topic.sh "春节旅游" --limit 10 --output report.md
 ./track-topic.sh "iPhone 16" --limit 5 --feishu
 ```
+
+## 长图导出
+
+搜索结果或帖子详情导出为带文字注释的 JPG 长图：
+
+```bash
+# 准备 posts.json（搜索+拉详情后整理）
+cat > posts.json << 'EOF'
+[
+  {
+    "title": "帖子标题",
+    "author": "作者名",
+    "stats": "1.3万赞 100收藏",
+    "desc": "正文摘要，支持\n换行",
+    "images": ["https://...webp", "https://...webp"],
+    "per_image_text": {"1": "第2张图的专属说明"}
+  }
+]
+EOF
+
+./export-long-image.sh --posts-file posts.json -o output.jpg
+```
+
+样式：白底黑字（模仿小红书原样），每个帖子前有文字块（标题+作者+正文），帖子间有分隔线。
+
+**per_image_text** 可选：如果原帖文字明确指向某张图（如"图7-9是青龙桥"），把说明放在对应图片上方。未指定则所有文字集中在文字块。
+
+**字体**：自动检测系统中文字体（STHeiti > Hiragino > Arial Unicode > Noto CJK）。
 
 ## 注意事项
 
