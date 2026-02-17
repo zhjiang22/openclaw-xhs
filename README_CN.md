@@ -35,6 +35,7 @@
 | 发表评论 | 在笔记下发表评论 |
 | 用户主页 | 获取用户资料和笔记列表 |
 | 热点跟踪 | 自动生成话题分析报告 |
+| 长图导出 | 将帖子导出为带注释的 JPG 长图 |
 | 记忆导出 | 导出收藏/点赞为 Markdown 记忆库 |
 
 ## 快速开始
@@ -168,8 +169,32 @@ scp /tmp/cookies.json user@server:~/.xiaohongshu/cookies.json
 ```bash
 ./mcp-call.sh                  # 查看可用工具
 ./mcp-call.sh search_feeds '{"keyword": "咖啡"}'
-./mcp-call.sh like_feed '{"note_id": "xxx", "xsec_token": "xxx", "like": true}'
+./mcp-call.sh like_feed '{"feed_id": "xxx", "xsec_token": "xxx", "like": true}'
 ```
+
+### 长图导出
+
+将搜索结果或帖子详情导出为带文字注释的 JPG 长图：
+
+```bash
+# 准备 posts.json（搜索+拉详情后整理）
+cat > posts.json << 'EOF'
+[
+  {
+    "title": "帖子标题",
+    "author": "作者名",
+    "stats": "1.3万赞 100收藏",
+    "desc": "正文摘要",
+    "images": ["https://...webp"],
+    "per_image_text": {"1": "第2张图的专属说明"}
+  }
+]
+EOF
+
+./export-long-image.sh --posts-file posts.json -o output.jpg
+```
+
+依赖：Python 3.10+、Pillow（`pip install Pillow`）
 
 ## 记忆导出：把收藏变成 AI 的记忆
 
@@ -280,7 +305,9 @@ openclaw-xhs/
 │   ├── comment.sh
 │   ├── user-profile.sh
 │   ├── track-topic.sh
-│   └── track-topic.py
+│   ├── track-topic.py
+│   ├── export-long-image.sh
+│   └── export-long-image.py
 └── tools/
     └── xhs-downloader/   # 记忆导出工具
         ├── README.md

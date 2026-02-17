@@ -35,6 +35,7 @@ Built on [xiaohongshu-mcp](https://github.com/xpzouying/xiaohongshu-mcp) and [XH
 | Comment | Post comments to notes |
 | User Profile | Get user info and their posts |
 | Trend Tracking | Auto-generate topic analysis reports |
+| Long Image Export | Export posts as annotated JPG long images |
 | Memory Export | Export liked/saved posts as Markdown for AI memory |
 
 ## Quick Start
@@ -149,6 +150,30 @@ Auto-search trending posts and generate analysis reports:
 | `publish_content` | Publish image post |
 | `publish_with_video` | Publish video post |
 
+### Long Image Export
+
+Export posts as annotated JPG long images (white background, black text):
+
+```bash
+# Prepare posts.json
+cat > posts.json << 'EOF'
+[
+  {
+    "title": "Post title",
+    "author": "Author",
+    "stats": "13k likes 100 saves",
+    "desc": "Post summary",
+    "images": ["https://...webp"],
+    "per_image_text": {"1": "Caption for 2nd image"}
+  }
+]
+EOF
+
+./export-long-image.sh --posts-file posts.json -o output.jpg
+```
+
+Requires: Python 3.10+, Pillow (`pip install Pillow`)
+
 ## Memory Export (Turn Likes into AI Memory)
 
 Export your liked/saved posts as a searchable knowledge base for AI assistants.
@@ -222,7 +247,9 @@ openclaw-xhs/
 │   ├── comment.sh
 │   ├── user-profile.sh
 │   ├── track-topic.sh
-│   └── track-topic.py
+│   ├── track-topic.py
+│   ├── export-long-image.sh
+│   └── export-long-image.py
 └── tools/
     └── xhs-downloader/   # Memory export tools
         ├── README.md
