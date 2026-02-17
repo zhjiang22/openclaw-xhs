@@ -11,4 +11,4 @@ if [ -z "$NOTE_ID" ] || [ -z "$XSEC_TOKEN" ] || [ -z "$CONTENT" ]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-"$SCRIPT_DIR/mcp-call.sh" post_comment_to_feed "{\"note_id\": \"$NOTE_ID\", \"xsec_token\": \"$XSEC_TOKEN\", \"content\": \"$CONTENT\"}"
+"$SCRIPT_DIR/mcp-call.sh" post_comment_to_feed "{\"feed_id\": \"$NOTE_ID\", \"xsec_token\": \"$XSEC_TOKEN\", \"content\": \"$CONTENT\"}"
