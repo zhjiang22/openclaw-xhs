@@ -130,6 +130,8 @@ scp /tmp/cookies.json user@server:~/.xiaohongshu/cookies.json
 ./recommend.sh                 # 获取推荐
 ./post-detail.sh <id> <token>  # 获取帖子详情
 ./comment.sh <id> <token> "写得真好！"  # 发表评论
+./interact-safe.sh like <id> <token>  # 稳妥点赞（自动重试/重启）
+./interact-safe.sh comment <id> <token> "我想来！"  # 稳妥评论
 ./user-profile.sh <user_id>    # 获取用户主页
 ```
 
@@ -169,7 +171,8 @@ scp /tmp/cookies.json user@server:~/.xiaohongshu/cookies.json
 ```bash
 ./mcp-call.sh                  # 查看可用工具
 ./mcp-call.sh search_feeds '{"keyword": "咖啡"}'
-./mcp-call.sh like_feed '{"feed_id": "xxx", "xsec_token": "xxx", "like": true}'
+./mcp-call.sh like_feed '{"feed_id": "xxx", "xsec_token": "xxx"}'  # 新版本常见用法
+# 若失败可改用 interact-safe.sh 自动兼容重试
 ```
 
 ### 长图导出
