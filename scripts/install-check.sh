@@ -28,11 +28,13 @@ check_binary "xiaohongshu-login" "$XHS_LOGIN" || MISSING=1
 
 echo ""
 
-# 检查 jq（可选）
+# 检查 jq（必需，用于安全构建 JSON）
 if command -v jq &> /dev/null; then
     echo "✅ jq: $(which jq)"
 else
-    echo "⚠️  jq: 未安装（可选，用于格式化 JSON 输出）"
+    echo "❌ jq: 未安装（必需，用于安全构建 JSON）"
+    echo "   安装: apt-get install jq / brew install jq"
+    MISSING=1
 fi
 
 # 检查 Python3（track-topic.py 需要）

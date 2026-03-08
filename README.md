@@ -112,6 +112,26 @@ scp /tmp/cookies.json user@server:~/.xiaohongshu/cookies.json
 
 Service runs at `http://localhost:18060/mcp`.
 
+#### Server Deployment (Headless Linux)
+
+On servers without a desktop environment, the underlying browser requires a virtual display.
+`start-mcp.sh` **auto-detects** the environment — if no display is found, it starts Xvfb automatically. Just install it first:
+
+```bash
+# Debian/Ubuntu
+sudo apt-get install -y xvfb
+
+# CentOS/RHEL
+sudo yum install -y xorg-x11-server-Xvfb
+```
+
+No extra configuration needed. The script handles:
+- Detecting the `DISPLAY` environment variable
+- Auto-starting `Xvfb :99` when no display is available
+- Cleaning up Xvfb when `stop-mcp.sh` is called
+
+> **Note**: Without Xvfb, login and search will fail on headless servers. See [Issue #3](https://github.com/zhjiang22/openclaw-xhs/issues/3).
+
 ## Usage
 
 ### Basic Commands
@@ -122,7 +142,7 @@ Service runs at `http://localhost:18060/mcp`.
 ./recommend.sh                 # Get recommendations
 ./post-detail.sh <id> <token>  # Get post details
 ./comment.sh <id> <token> "Great post!"  # Comment
-./user-profile.sh <user_id>    # Get user profile
+./user-profile.sh <user_id> <xsec_token>  # Get user profile
 ```
 
 ### Trend Tracking
@@ -257,6 +277,17 @@ openclaw-xhs/
         ├── export_memory.py
         └── export_to_workspace.py
 ```
+
+## Security
+
+This project implements the following security measures:
+
+- **Cookie protection**: Cookie files are copied with `600` permissions (owner-only read/write)
+- **Injection prevention**: All shell scripts use `jq` to build JSON payloads instead of string interpolation, preventing shell injection
+- **Tool name validation**: MCP tool names are restricted to alphanumeric characters and underscores
+- **Path validation**: Cross-skill script calls validate that target paths are within allowed directories
+- **Third-party content**: Content fetched from Xiaohongshu is user-generated; exercise appropriate caution
+
 
 ## Disclaimer
 

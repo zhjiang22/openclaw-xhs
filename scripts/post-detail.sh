@@ -12,4 +12,6 @@ if [ -z "$NOTE_ID" ] || [ -z "$XSEC_TOKEN" ]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-"$SCRIPT_DIR/mcp-call.sh" get_feed_detail "{\"feed_id\": \"$NOTE_ID\", \"xsec_token\": \"$XSEC_TOKEN\"}"
+ARGS=$(jq -n --arg fid "$NOTE_ID" --arg tok "$XSEC_TOKEN" \
+  '{"feed_id":$fid,"xsec_token":$tok}')
+"$SCRIPT_DIR/mcp-call.sh" get_feed_detail "$ARGS"

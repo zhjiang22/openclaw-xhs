@@ -25,15 +25,20 @@ XHS_SCRIPTS = SCRIPT_DIR  # 现在就在 xiaohongshu/scripts 目录下
 # 飞书 skill 路径（支持多种可能的位置）
 def find_feishu_scripts() -> Path:
     """查找 feishu-docs skill 的 scripts 目录"""
-    possible_paths = [
-        SCRIPT_DIR.parent.parent / "feishu-docs" / "scripts",  # 同级 skill
-        Path.home() / ".openclaw" / "workspace" / "skills" / "feishu-docs" / "scripts",
-        Path.home() / ".claude" / "skills" / "feishu-docs" / "scripts",
+    # 只允许在已知的 skill 目录中查找
+    allowed_roots = [
+        SCRIPT_DIR.parent.parent,  # 同级 skill 目录
+        Path.home() / ".openclaw" / "workspace" / "skills",
+        Path.home() / ".claude" / "skills",
     ]
-    for p in possible_paths:
-        if p.exists():
-            return p
-    return possible_paths[0]  # 返回默认路径（可能不存在）
+    for root in allowed_roots:
+        candidate = (root / "feishu-docs" / "scripts").resolve()
+        # 校验解析后的路径仍在允许的根目录下（防止符号链接逃逸）
+        if candidate.is_dir() and any(
+            str(candidate).startswith(str(r.resolve()) + os.sep) for r in allowed_roots
+        ):
+            return candidate
+    return allowed_roots[0] / "feishu-docs" / "scripts"  # 返回默认路径（可能不存在）
 
 FEISHU_SCRIPTS = find_feishu_scripts()
 

@@ -9,4 +9,5 @@ if [ -z "$KEYWORD" ]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-"$SCRIPT_DIR/mcp-call.sh" search_feeds "{\"keyword\": \"$KEYWORD\"}"
+ARGS=$(jq -n --arg kw "$KEYWORD" '{"keyword":$kw}')
+"$SCRIPT_DIR/mcp-call.sh" search_feeds "$ARGS"

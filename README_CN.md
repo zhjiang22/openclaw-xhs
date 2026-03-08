@@ -120,6 +120,26 @@ scp /tmp/cookies.json user@server:~/.xiaohongshu/cookies.json
 
 停止服务：`./stop-mcp.sh`
 
+#### 服务器部署（无桌面环境）
+
+在没有图形界面的 Linux 服务器上，`xiaohongshu-mcp` 底层的浏览器需要虚拟显示器才能正常工作。
+`start-mcp.sh` 会**自动检测**是否有桌面环境，如果没有则自动启动 Xvfb，你只需提前安装：
+
+```bash
+# Debian/Ubuntu
+sudo apt-get install -y xvfb
+
+# CentOS/RHEL
+sudo yum install -y xorg-x11-server-Xvfb
+```
+
+安装后无需额外配置，`start-mcp.sh` 会自动处理：
+- 检测 `DISPLAY` 环境变量
+- 没有显示器时自动启动 `Xvfb :99`
+- `stop-mcp.sh` 停止服务时会一并清理 Xvfb 进程
+
+> **提示**：如果不安装 Xvfb，登录和搜索功能会失败。参见 [Issue #3](https://github.com/zhjiang22/openclaw-xhs/issues/3)。
+
 ## 使用方法
 
 ### 基础命令
@@ -130,7 +150,7 @@ scp /tmp/cookies.json user@server:~/.xiaohongshu/cookies.json
 ./recommend.sh                 # 获取推荐
 ./post-detail.sh <id> <token>  # 获取帖子详情
 ./comment.sh <id> <token> "写得真好！"  # 发表评论
-./user-profile.sh <user_id>    # 获取用户主页
+./user-profile.sh <user_id> <xsec_token>  # 获取用户主页
 ```
 
 ### 热点跟踪
@@ -264,6 +284,17 @@ python export_memory.py
 ```
 
 现在你的 AI 助手可以搜索你的小红书收藏了！
+
+## 安全说明
+
+本项目在脚本安全方面采取了以下措施：
+
+- **Cookies 保护**：cookies 文件复制时自动设置 `600` 权限（仅当前用户可读写）
+- **防注入**：所有 shell 脚本使用 `jq` 构建 JSON payload，不通过字符串拼接，防止 shell 注入攻击
+- **工具名校验**：MCP 工具名限制为字母数字和下划线，拒绝非法字符
+- **路径校验**：跨 skill 调用时校验目标路径在允许的目录范围内
+- **第三方内容**：从小红书获取的内容为用户生成内容（UGC），请注意甄别
+
 
 ## 注意事项
 
